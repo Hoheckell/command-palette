@@ -1,0 +1,46 @@
+{
+  "$schema": "https://opencode.ai/schema/opencode.json",
+  "name": "command-palette",
+  "version": "1.0.0",
+  "description": "Hoheckell's Command Palette - Terminal command browser with TLDR integration",
+  "agents": {
+    "$schema": "https://opencode.ai/schema/agents.json",
+    "default": {
+      "model": {
+        "provider": "anthropic",
+        "name": "claude-sonnet-4-20250514"
+      }
+    }
+  },
+  "customCommands": {
+    "dev": {
+      "command": "npm run tauri dev",
+      "description": "Start Tauri development server"
+    },
+    "build": {
+      "command": "npm run tauri build",
+      "description": "Build the Tauri application for production"
+    },
+    "check": {
+      "command": "cargo check",
+      "description": "Check Rust code for errors",
+      "workdir": "src-tauri"
+    },
+    "changelog": {
+      "command": "npx changelogen@latest --output CHANGELOG.md",
+      "description": "Generate changelog from conventional commits"
+    },
+    "release:patch": {
+      "command": "npm version patch && git push --follow-tags",
+      "description": "Bump patch version, tag, and push"
+    },
+    "release:minor": {
+      "command": "npm version minor && git push --follow-tags",
+      "description": "Bump minor version, tag, and push"
+    },
+    "release:major": {
+      "command": "npm version major && git push --follow-tags",
+      "description": "Bump major version, tag, and push"
+    }
+  }
+}

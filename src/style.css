@@ -1,0 +1,215 @@
+body {
+  margin: 0;
+  background: #111111;
+  color: #f1f1f1;
+  font-family: sans-serif;
+}
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.topbar {
+  background: #151b23;
+  padding: 16px;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.topbar h1 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.toolbar {
+  display: flex;
+  gap: 10px;
+  padding: 12px 16px;
+  background: #1d2633;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.toolbar button {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 8px;
+  background: #2b3647;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+  transition: 0.2s;
+}
+
+.toolbar button:hover {
+  background: #3a4860;
+}
+
+.search-section {
+  background: #181818;
+  padding: 16px;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+#search {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #333;
+  background: #101010;
+  color: white;
+  box-sizing: border-box;
+}
+
+#command-help {
+  background: #141414;
+}
+
+.help-box {
+  margin: 16px;
+  padding: 16px;
+  border-radius: 10px;
+  background: #1b1b1b;
+  border: 1px solid #2a2a2a;
+}
+
+.history-section {
+  flex: 1;
+  overflow-y: auto;
+  background: #0d0d0d;
+}
+
+#history {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#history li {
+  padding: 12px 16px;
+  border-bottom: 1px solid #1e1e1e;
+  cursor: pointer;
+  transition: 0.15s;
+}
+
+#history li:hover {
+  background: #1a1f27;
+}
+
+.tldr-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  background: #141414;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.green {
+  background: #22c55e;
+}
+
+.red {
+  background: #ef4444;
+}
+
+pre {
+  white-space: pre-wrap;
+  line-height: 1.5;
+  overflow-x: auto;
+}
+
+.light-theme {
+  background: #f4f4f4;
+  color: #111;
+}
+
+.light-theme .topbar {
+  background: #dce4ef;
+}
+
+.light-theme .toolbar {
+  background: #e8edf5;
+}
+
+.light-theme .toolbar button {
+  background: #cfd8e5;
+  color: #111;
+}
+
+.light-theme .search-section {
+  background: #f0f0f0;
+}
+
+.light-theme #search {
+  background: white;
+  color: black;
+  border: 1px solid #bbb;
+}
+
+.light-theme .history-section {
+  background: #ffffff;
+}
+
+.light-theme #history li {
+  border-bottom: 1px solid #ddd;
+}
+
+.light-theme #history li:hover {
+  background: #edf2f7;
+}
+
+.light-theme .help-box {
+  background: white;
+  color: black;
+}
+
+.history-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.history-row button {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 6px;
+  background: #2b3647;
+  color: white;
+  cursor: pointer;
+}
+.saved-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.saved-content {
+  width: 80%;
+  max-width: 1000px;
+  max-height: 85vh;
+  overflow-y: auto;
+  background: #181818;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.saved-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}

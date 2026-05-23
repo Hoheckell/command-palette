@@ -1,0 +1,30 @@
+{
+  "name": "command-palette",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "author": "Hoheckell",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Hoheckell/command-palettegit add ."
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "tauri": "tauri"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2",
+    "@tauri-apps/plugin-fs": "^2.5.1",
+    "@tauri-apps/plugin-opener": "^2",
+    "fuse.js": "^7.3.0",
+    "lucide": "^1.16.0"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.11.2",
+    "typescript": "~5.6.2",
+    "vite": "^6.0.3"
+  }
+}
