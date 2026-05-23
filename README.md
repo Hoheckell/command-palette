@@ -18,6 +18,16 @@ npm install
 npm run tauri dev
 ```
 
+## Testes
+
+```bash
+npm run test:unit    # unitarios com cobertura
+npm run test:e2e     # fluxo no navegador com Playwright
+npm run test:ci      # typecheck + unit + e2e
+```
+
+O CI roda em pull requests e pushes na branch `main`, publica o artefato de cobertura e o relatorio do Playwright.
+
 ## Release
 
 ```bash

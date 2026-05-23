@@ -99,13 +99,13 @@ fn save_history(commands: Vec<String>) -> Result<(), String> {
 }
 
 #[tauri::command]
-fn get_saved_history() -> Result<Vec<String>, String> {
+fn get_saved_history() -> Result<Vec<(i64, String)>, String> {
     let conn = get_connection();
 
     let mut stmt = conn
         .prepare(
             "
-        SELECT command
+        SELECT id, command
         FROM commands
         WHERE source = 'history'
         ORDER BY id DESC
@@ -114,7 +114,12 @@ fn get_saved_history() -> Result<Vec<String>, String> {
         .map_err(|e| e.to_string())?;
 
     let rows = stmt
-        .query_map([], |row| row.get(0))
+        .query_map([], |row| {
+            Ok((
+                row.get::<_, i64>(0)?,
+                row.get::<_, String>(1)?,
+            ))
+        })
         .map_err(|e| e.to_string())?;
 
     let mut results = vec![];
