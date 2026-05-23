@@ -27,6 +27,7 @@ describe('tauri-api', () => {
     await tauriApi.getSavedCommands()
     await tauriApi.getSavedHistory()
     await tauriApi.getTldr('ls')
+    await tauriApi.getCommandHelp('ssh')
 
     expect(invoke).toHaveBeenCalledWith('has_tldr')
     expect(invoke).toHaveBeenCalledWith('install_tldr')
@@ -40,5 +41,6 @@ describe('tauri-api', () => {
     expect(invoke).toHaveBeenCalledWith('get_saved_commands')
     expect(invoke).toHaveBeenCalledWith('get_saved_history')
     expect(invoke).toHaveBeenCalledWith('get_tldr', { command: 'ls' })
+    expect(invoke).toHaveBeenCalledWith('get_command_help', { command: 'ssh' })
   })
 })

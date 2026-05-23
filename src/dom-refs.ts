@@ -2,9 +2,11 @@ export interface AppDomRefs {
   viewSavedHistoryButton: HTMLButtonElement
   viewSavedCommandsButton: HTMLButtonElement
   viewSavedHelpsButton: HTMLButtonElement
+  openCommandBuilderButton: HTMLButtonElement
   helpContainer: HTMLDivElement
   openHelpButton: HTMLButtonElement
   commandHelp: HTMLDivElement
+  builderModal: HTMLDivElement
   tldrStatus: HTMLDivElement
   disconnectButton: HTMLButtonElement
   captureButton: HTMLButtonElement
@@ -19,9 +21,11 @@ export function getAppDomRefs(): AppDomRefs {
     viewSavedHistoryButton: document.querySelector('#view-saved-history') as HTMLButtonElement,
     viewSavedCommandsButton: document.querySelector('#view-saved-commands') as HTMLButtonElement,
     viewSavedHelpsButton: document.querySelector('#view-saved-helps') as HTMLButtonElement,
+    openCommandBuilderButton: document.querySelector('#open-command-builder') as HTMLButtonElement,
     helpContainer: document.querySelector('#app-help') as HTMLDivElement,
     openHelpButton: document.querySelector('#open-help') as HTMLButtonElement,
     commandHelp: document.querySelector('#command-help') as HTMLDivElement,
+    builderModal: document.querySelector('#builder-modal') as HTMLDivElement,
     tldrStatus: document.querySelector('#tldr-status') as HTMLDivElement,
     disconnectButton: document.querySelector('#disconnect-terminal') as HTMLButtonElement,
     captureButton: document.querySelector('#capture-terminal') as HTMLButtonElement,

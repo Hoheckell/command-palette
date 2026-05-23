@@ -102,7 +102,21 @@ export function renderHistoryList(commands: string[], deps: RenderHistoryListDep
     li.appendChild(row)
 
     li.onclick = async () => {
-      await onShowCommandHelp(command)
+      if (li.classList.contains('is-loading-help')) return
+
+      li.classList.add('is-loading-help')
+
+      const loadingBadge = document.createElement('span')
+      loadingBadge.className = 'help-loading-badge'
+      loadingBadge.innerHTML = '<span class="help-spinner" aria-hidden="true"></span> Carregando ajuda...'
+      row.appendChild(loadingBadge)
+
+      try {
+        await onShowCommandHelp(command)
+      } finally {
+        loadingBadge.remove()
+        li.classList.remove('is-loading-help')
+      }
     }
 
     li.ondblclick = async () => {

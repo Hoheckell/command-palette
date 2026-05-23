@@ -1,5 +1,5 @@
 import { invoke } from '@tauri-apps/api/core'
-import type { SavedCommandRow, SavedHistoryRow } from '../shared/types/command'
+import type { CommandHelpData, SavedCommandRow, SavedHistoryRow } from '../shared/types/command'
 
 export const tauriApi = {
   hasTldr() {
@@ -48,5 +48,9 @@ export const tauriApi = {
 
   getTldr(command: string) {
     return invoke<string>('get_tldr', { command })
+  },
+
+  getCommandHelp(command: string) {
+    return invoke<CommandHelpData>('get_command_help', { command })
   }
 }

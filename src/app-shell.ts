@@ -58,6 +58,13 @@ export const appShellHtml = `
 >
   📖
 </button>
+
+<button
+  id="open-command-builder"
+  title="Abrir assistente de composição"
+>
+  🧱
+</button>
     <label class="theme-switch">
 
   <input
@@ -94,6 +101,7 @@ export const appShellHtml = `
 
   <div id="app-help"></div>
   <div id="saved-modal"></div>
+  <div id="builder-modal"></div>
 
 </div>
 `

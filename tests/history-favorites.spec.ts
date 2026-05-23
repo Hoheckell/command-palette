@@ -177,16 +177,36 @@ test('ajuda principal abre e fecha corretamente', async ({ page }) => {
   await expect(page.locator('.help-overlay')).toHaveCount(0)
 })
 
+test('ajuda principal fecha com tecla Escape', async ({ page }) => {
+  await page.locator('#open-help').click()
+  await expect(page.locator('#app-help .help-overlay')).toBeVisible()
+
+  await page.keyboard.press('Escape')
+
+  await expect(page.locator('#app-help .help-overlay')).toHaveCount(0)
+})
+
 test('ajuda de comando abre ao clicar item e permite salvar', async ({ page }) => {
   const npmRow = page.locator('#history li', { hasText: 'npm test' }).first()
   await npmRow.locator('span').first().click()
 
-  await expect(page.locator('#command-help .help-box')).toBeVisible()
+  await expect(page.locator('#command-help .help-modal')).toBeVisible()
   await expect(page.locator('#command-help pre')).toContainText('mock tldr content')
 
   const saveButton = page.locator('#save-command')
   await saveButton.click()
   await expect(saveButton).toHaveText('Salvo')
+})
+
+test('ajuda de comando fecha com tecla Escape', async ({ page }) => {
+  const npmRow = page.locator('#history li', { hasText: 'npm test' }).first()
+  await npmRow.locator('span').first().click()
+
+  await expect(page.locator('#command-help .help-overlay')).toBeVisible()
+
+  await page.keyboard.press('Escape')
+
+  await expect(page.locator('#command-help .help-overlay')).toHaveCount(0)
 })
 
 test('executar comando salvo pelo modal dispara run_command', async ({ page }) => {

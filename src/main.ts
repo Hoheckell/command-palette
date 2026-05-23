@@ -7,6 +7,7 @@ import { openSavedCommandsModal } from './features/history/saved-commands-modal'
 import { openSavedHistoryModal } from './features/history/saved-history-modal'
 import { showCommandHelp } from './features/help/command-help'
 import { openAppHelp } from './features/help/app-help'
+import { openCommandBuilderModal } from './features/builder/command-builder-modal'
 import { openSavedModal } from './features/modal/saved-modal'
 import { appShellHtml } from './app-shell'
 import { getAppDomRefs } from './dom-refs'
@@ -82,9 +83,11 @@ const {
   viewSavedHistoryButton,
   viewSavedCommandsButton,
   viewSavedHelpsButton,
+  openCommandBuilderButton,
   helpContainer,
   openHelpButton,
   commandHelp,
+  builderModal,
   tldrStatus,
   disconnectButton,
   captureButton,
@@ -232,6 +235,18 @@ function bindEvents() {
       openSavedModal,
       savedCommandsCache,
       rerenderCurrentList
+    })
+  }
+
+  openCommandBuilderButton.onclick = () => {
+    openCommandBuilderModal({
+      container: builderModal,
+      onRunCommand: async command => {
+        await tauriApi.runCommand(command)
+      },
+      onSaveCommand: async command => {
+        await saveHistoryCommand(command)
+      }
     })
   }
 }

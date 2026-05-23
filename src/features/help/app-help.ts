@@ -1,4 +1,17 @@
 export function openAppHelp(helpContainer: HTMLDivElement) {
+  const closeModal = () => {
+    helpContainer.innerHTML = ''
+    document.removeEventListener('keydown', handleEscape)
+  }
+
+  const handleEscape = (event: KeyboardEvent) => {
+    if (event.key === 'Escape') {
+      closeModal()
+    }
+  }
+
+  document.addEventListener('keydown', handleEscape)
+
   helpContainer.innerHTML = `
 
     <div class="help-overlay">
@@ -8,7 +21,7 @@ export function openAppHelp(helpContainer: HTMLDivElement) {
         <div class="help-modal-top">
 
           <h2>
-            Sobre o Command Palette
+            Sobre o Hoheckell's Command Palette
           </h2>
 
           <button id="close-main-help">
@@ -184,10 +197,17 @@ docker logs -f api
   `
 
   const closeButton = document.querySelector('#close-main-help') as HTMLButtonElement | null
+  const overlay = helpContainer.querySelector('.help-overlay') as HTMLDivElement | null
 
   if (closeButton) {
-    closeButton.onclick = () => {
-      helpContainer.innerHTML = ''
+    closeButton.onclick = closeModal
+  }
+
+  if (overlay != null) {
+    overlay.onclick = event => {
+      if (event.target === overlay) {
+        closeModal()
+      }
     }
   }
 }
