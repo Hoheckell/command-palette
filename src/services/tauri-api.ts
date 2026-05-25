@@ -10,6 +10,18 @@ export const tauriApi = {
     return invoke('install_tldr')
   },
 
+  hasInternet() {
+    return invoke<boolean>('has_internet')
+  },
+
+  hasXdotool() {
+    return invoke<boolean>('has_xdotool')
+  },
+
+  installXdotool() {
+    return invoke('install_xdotool')
+  },
+
   getHistory() {
     return invoke<string[]>('get_history')
   },

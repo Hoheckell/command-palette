@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.2.0] - 2026-05-25
+
+### Adicionado
+
+- Botão "Alterar" ao lado do status "IA configurada" para trocar a API key do OpenRouter
+- Estilo específico para `#save-command` no modal de ajuda
+
+### Alterado
+
+- Seção de ajuda "O que é TLDR?" atualizada para "Documentação TLDR" — remove menção de instalação, esclarece que a documentação é obtida via API automaticamente
+- Objetivo do projeto na ajuda atualizado para refletir documentação TLDR automática via API
+
 ## [0.1.0] - 2026-05-23
 
 ### Adicionado

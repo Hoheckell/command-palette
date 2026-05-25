@@ -75,19 +75,15 @@ export function openAppHelp(helpContainer: HTMLDivElement) {
           <hr />
 
           <h3>
-            O que é TLDR?
+            Documentação TLDR
           </h3>
 
           <p>
-            TLDR é uma coleção comunitária de exemplos simples para comandos Linux.
+            Ao clicar em um comando, a aplicação busca automaticamente a documentação TLDR — exemplos práticos e resumidos — via API online.
           </p>
 
           <p>
-            Diferente do comando man, o TLDR mostra exemplos rápidos e práticos.
-          </p>
-
-          <p>
-            Você pode verificar o status do TLDR no canto inferior direito e instalar diretamente pela interface se necessário.
+            Diferente do comando man, o TLDR mostra exemplos rápidos direto ao ponto. Não é necessário instalar nada.
           </p>
 
           <p>
@@ -139,15 +135,15 @@ docker logs -f api
           </h3>
 
           <p>
-            Clique em "Capturar terminal" na barra inferior.
+            Clique em "Capturar terminal" (⛓) na barra inferior.
           </p>
 
           <p>
-            Depois clique na janela do terminal que deseja controlar.
+            Um toast no topo da tela aparecerá. Clique na janela do terminal que deseja controlar.
           </p>
 
           <p>
-            A aplicação enviará comandos para esse terminal.
+            A aplicação exibirá um toast verde confirmando a conexão e enviará comandos para esse terminal.
           </p>
 
           <hr />
@@ -247,7 +243,7 @@ docker logs -f api
           </h3>
 
           <p>
-            O objetivo é criar uma memória operacional pesquisável para terminal Linux, combinando histórico, documentação TLDR, explicações por IA e um construtor visual de comandos.
+            O objetivo é criar uma memória operacional pesquisável para terminal Linux, combinando histórico, documentação TLDR automática via API, explicações por IA e um construtor visual de comandos.
           </p>
 
         </div>

@@ -42,7 +42,83 @@ export function renderHistoryList(commands: string[], deps: RenderHistoryListDep
     row.className = 'history-row'
 
     const text = document.createElement('span')
+    text.className = 'history-command-text'
     text.innerText = command
+
+    const helpButton = document.createElement('button')
+
+helpButton.className =
+  'help-button'
+
+helpButton.innerText = '📖'
+
+helpButton.title =
+  'Ver ajuda do comando'
+
+helpButton.onclick = async event => {
+
+  event.stopPropagation()
+
+  if (
+    li.classList.contains(
+      'is-loading-help'
+    )
+  ) return
+
+  li.classList.add(
+    'is-loading-help'
+  )
+
+  const loadingBadge =
+    document.createElement('span')
+
+  loadingBadge.className =
+    'help-loading-badge'
+
+  loadingBadge.innerHTML = `
+      <span
+        class="help-spinner"
+        aria-hidden="true"
+      ></span>
+
+      Carregando ajuda...
+  `
+
+  row.appendChild(loadingBadge)
+
+  try {
+
+    await onShowCommandHelp(
+      command
+    )
+
+  } finally {
+
+    loadingBadge.remove()
+
+    li.classList.remove(
+      'is-loading-help'
+    )
+  }
+}
+const runButton =
+  document.createElement('button')
+
+runButton.className =
+  'run-button'
+
+runButton.innerText = '▶'
+
+runButton.title =
+  'Executar comando'
+
+runButton.onclick =
+  async event => {
+
+    event.stopPropagation()
+
+    await onRunCommand(command)
+  }
 
     const favoriteButton = document.createElement('button')
     favoriteButton.className = 'favorite-button'
@@ -97,31 +173,24 @@ export function renderHistoryList(commands: string[], deps: RenderHistoryListDep
     }
 
     row.appendChild(text)
-    row.appendChild(favoriteButton)
-    row.appendChild(saveButton)
+
+const actions =
+  document.createElement('div')
+
+actions.className =
+  'history-actions'
+
+actions.appendChild(helpButton)
+
+actions.appendChild(runButton)
+
+actions.appendChild(favoriteButton)
+
+actions.appendChild(saveButton)
+
+row.appendChild(actions)
     li.appendChild(row)
 
-    li.onclick = async () => {
-      if (li.classList.contains('is-loading-help')) return
-
-      li.classList.add('is-loading-help')
-
-      const loadingBadge = document.createElement('span')
-      loadingBadge.className = 'help-loading-badge'
-      loadingBadge.innerHTML = '<span class="help-spinner" aria-hidden="true"></span> Carregando ajuda...'
-      row.appendChild(loadingBadge)
-
-      try {
-        await onShowCommandHelp(command)
-      } finally {
-        loadingBadge.remove()
-        li.classList.remove('is-loading-help')
-      }
-    }
-
-    li.ondblclick = async () => {
-      await onRunCommand(command)
-    }
 
     historyList.appendChild(li)
   })

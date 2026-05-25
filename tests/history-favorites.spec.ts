@@ -90,8 +90,8 @@ test('favorito sobe para o topo e muda icone de salvar', async ({ page }) => {
   await expect(firstBefore).toContainText('npm test')
 
   const gitRow = page.locator('#history li', { hasText: 'git status' }).first()
-  const favoriteButton = gitRow.locator('button').first()
-  const saveButton = gitRow.locator('button').nth(1)
+  const favoriteButton = gitRow.locator('button').nth(2)
+  const saveButton = gitRow.locator('button').nth(3)
 
   await expect(saveButton).toHaveText('💾')
   await favoriteButton.click()
@@ -101,46 +101,46 @@ test('favorito sobe para o topo e muda icone de salvar', async ({ page }) => {
   await expect(firstAfter).toHaveClass(/is-favorite/)
 
   const gitRowAfter = page.locator('#history li', { hasText: 'git status' }).first()
-  await expect(gitRowAfter.locator('button').first()).toHaveText('★')
-  await expect(gitRowAfter.locator('button').nth(1)).toHaveText('🗑️')
+  await expect(gitRowAfter.locator('button').nth(2)).toHaveText('★')
+  await expect(gitRowAfter.locator('button').nth(3)).toHaveText('🗑️')
 })
 
 test('desfavoritar mantem comando salvo e volta para ordenacao natural', async ({ page }) => {
   const gitRow = page.locator('#history li', { hasText: 'git status' }).first()
-  await gitRow.locator('button').first().click()
+  await gitRow.locator('button').nth(2).click()
 
   const firstAfterFavorite = page.locator('#history li').first()
   await expect(firstAfterFavorite).toContainText('git status')
 
-  await firstAfterFavorite.locator('button').first().click()
+  await firstAfterFavorite.locator('button').nth(2).click()
 
   const firstAfterUnfavorite = page.locator('#history li').first()
   await expect(firstAfterUnfavorite).toContainText('npm test')
 
   const gitRowAfter = page.locator('#history li', { hasText: 'git status' }).first()
-  await expect(gitRowAfter.locator('button').first()).toHaveText('☆')
-  await expect(gitRowAfter.locator('button').nth(1)).toHaveText('🗑️')
+  await expect(gitRowAfter.locator('button').nth(2)).toHaveText('☆')
+  await expect(gitRowAfter.locator('button').nth(3)).toHaveText('🗑️')
 })
 
 test('botao salvar alterna para lixeira e permite remover', async ({ page }) => {
   const lsRow = page.locator('#history li', { hasText: 'ls' }).first()
-  const saveButton = lsRow.locator('button').nth(1)
+  const saveButton = lsRow.locator('button').nth(3)
 
   await expect(saveButton).toHaveText('💾')
   await saveButton.click()
 
   const lsRowSaved = page.locator('#history li', { hasText: 'ls' }).first()
-  const trashButton = lsRowSaved.locator('button').nth(1)
+  const trashButton = lsRowSaved.locator('button').nth(3)
   await expect(trashButton).toHaveText('🗑️')
 
   await trashButton.click()
 
   const lsRowAfterDelete = page.locator('#history li', { hasText: 'ls' }).first()
-  await expect(lsRowAfterDelete.locator('button').nth(1)).toHaveText('💾')
+  await expect(lsRowAfterDelete.locator('button').nth(3)).toHaveText('💾')
 })
 
 test('busca filtra comandos e preserva favoritos no resultado', async ({ page }) => {
-  await page.locator('#history li', { hasText: 'git status' }).first().locator('button').first().click()
+  await page.locator('#history li', { hasText: 'git status' }).first().locator('button').nth(2).click()
   await page.locator('#search').fill('s')
 
   const rows = page.locator('#history li')
@@ -188,7 +188,7 @@ test('ajuda principal fecha com tecla Escape', async ({ page }) => {
 
 test('ajuda de comando abre ao clicar item e permite salvar', async ({ page }) => {
   const npmRow = page.locator('#history li', { hasText: 'npm test' }).first()
-  await npmRow.locator('span').first().click()
+  await npmRow.locator('button').first().click()
 
   await expect(page.locator('#command-help .help-modal')).toBeVisible()
   await expect(page.locator('#command-help pre')).toContainText('mock tldr content')
@@ -200,7 +200,7 @@ test('ajuda de comando abre ao clicar item e permite salvar', async ({ page }) =
 
 test('ajuda de comando fecha com tecla Escape', async ({ page }) => {
   const npmRow = page.locator('#history li', { hasText: 'npm test' }).first()
-  await npmRow.locator('span').first().click()
+  await npmRow.locator('button').first().click()
 
   await expect(page.locator('#command-help .help-overlay')).toBeVisible()
 
@@ -210,7 +210,7 @@ test('ajuda de comando fecha com tecla Escape', async ({ page }) => {
 })
 
 test('executar comando salvo pelo modal dispara run_command', async ({ page }) => {
-  await page.locator('#history li', { hasText: 'npm test' }).first().locator('button').nth(1).click()
+  await page.locator('#history li', { hasText: 'npm test' }).first().locator('button').nth(3).click()
   await page.locator('#view-saved-commands').click()
 
   const modalItem = page.locator('.history-item', { hasText: 'npm test' }).first()
@@ -226,7 +226,7 @@ test('executar comando salvo pelo modal dispara run_command', async ({ page }) =
 
 test('lixeira remove item no historico salvo', async ({ page }) => {
   const npmRow = page.locator('#history li', { hasText: 'npm test' }).first()
-  await npmRow.locator('button').first().click()
+  await npmRow.locator('button').nth(2).click()
 
   await page.locator('#view-saved-history').click()
 

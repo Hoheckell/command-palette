@@ -1,46 +1,76 @@
 # Hoheckell's Command Palette
 
-Navegador de comandos de terminal com integração TLDR. Transforma seu histórico do shell em uma biblioteca pesquisável.
+Navegador de comandos de terminal para Linux com histórico pesquisável, documentação TLDR e execução no terminal conectado.
 
 ## Funcionalidades
 
 - Carrega histórico do `~/.bash_history`
 - Busca fuzzy com Fuse.js
 - Documentação TLDR para comandos
+- Explicação aprofundada com IA (OpenRouter)
 - Execução de comandos no terminal via xdotool
-- Banco SQLite local para salvar comandos favoritos
+- Biblioteca local em SQLite para comandos salvos
 - Tema claro/escuro
+
+## Stack
+
+- Tauri v2 (Rust + TypeScript)
+- Vite + Vitest + Playwright
+- SQLite (rusqlite)
+
+## Requisitos (Linux)
+
+- Node.js 22+
+- Rust (toolchain estável)
+- Dependências de build Tauri/WebKitGTK
+- `xdotool` (para execução no terminal conectado)
 
 ## Desenvolvimento
 
 ```bash
-npm install
+npm ci
 npm run tauri dev
 ```
 
 ## Testes
 
 ```bash
-npm run test:unit    # unitarios com cobertura
-npm run test:e2e     # fluxo no navegador com Playwright
-npm run test:ci      # typecheck + unit + e2e
+npm run typecheck
+npm run test:unit
+npm run test:e2e
+npm run test:ci
 ```
 
-O CI roda em pull requests e pushes na branch `main`, publica o artefato de cobertura e o relatorio do Playwright.
+`test:ci` roda o mesmo fluxo validado no GitHub Actions: typecheck + unit + e2e.
 
-## Release
+## CI (GitHub Actions)
+
+- Workflow: `.github/workflows/ci.yml`
+- Gatilhos: `push` na `main`, `pull_request` e `workflow_dispatch`
+- Jobs:
+  - Unit + typecheck com cobertura
+  - E2E com Playwright (Chromium)
+- Artefatos publicados:
+  - `coverage-report`
+  - `playwright-report` e `test-results`
+
+## Release Linux (primeiro release open source)
+
+- Workflow: `.github/workflows/release.yml`
+- Gatilhos: tag `v*` e `workflow_dispatch`
+- Build alvo: `x86_64-unknown-linux-gnu`
+- Pacotes publicados no GitHub Release:
+  - `.deb`
+  - `.AppImage`
+
+### Como publicar
+
+1. Atualize versão e changelog.
+2. Crie e envie a tag:
 
 ```bash
-npm run release:patch   # v0.1.0 -> v0.1.1
-npm run release:minor   # v0.1.0 -> v0.2.0
-npm run release:major   # v0.1.0 -> v1.0.0
+git tag v0.3.0
+git push origin v0.3.0
 ```
 
-Isso cria uma tag git e faz push. O GitHub Actions constrói os binários automaticamente.
-
-## Stack
-
-- Tauri v2 (Rust + TypeScript)
-- SQLite (rusqlite)
-- TLDR (documentação comunitária)
-- xdotool (controle de janelas Linux)
+3. O workflow `Release Linux` cria os binários e anexa os artefatos automaticamente no release da tag.

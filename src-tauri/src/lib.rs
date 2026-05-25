@@ -2,11 +2,12 @@ use chrono::Utc;
 use regex::Regex;
 use rusqlite::{params, Connection};
 use serde::Serialize;
-use std::env;
-use std::fs;
+use std::{env, fs};
 use std::process::Command;
 use std::collections::HashMap;
 use std::sync::Mutex;
+use std::path::PathBuf;
+use dirs::cache_dir;
 
 struct AppState {
     terminal_window: Mutex<String>,
@@ -431,23 +432,65 @@ fn has_tldr() -> bool {
 }
 
 #[tauri::command]
-fn get_tldr(command: String) -> Result<String, String> {
-    let output = Command::new("tldr")
-        .arg(&command)
-        .output()
-        .map_err(|e| e.to_string())?;
+fn get_tldr(
+    command: String
+) -> Result<String, String> {
 
-    let stdout = String::from_utf8_lossy(&output.stdout).to_string();
+    let cache_dir =
+        get_tldr_cache_dir();
 
-    let stderr = String::from_utf8_lossy(&output.stderr).to_string();
+    let cache_file =
+        cache_dir.join(
+            format!("{}.md", command)
+        );
 
-    if !output.status.success() {
-        return Err(stderr);
+    if cache_file.exists() {
+
+        return fs::read_to_string(
+            cache_file
+        ).map_err(|e| e.to_string());
     }
 
-    let filtered = clean_shell_output(&stdout);
+    let urls = vec![
 
-    Ok(filtered)
+        format!(
+            "https://raw.githubusercontent.com/tldr-pages/tldr/main/pages/common/{}.md",
+            command
+        ),
+
+        format!(
+            "https://raw.githubusercontent.com/tldr-pages/tldr/main/pages/linux/{}.md",
+            command
+        )
+    ];
+
+    for url in urls {
+
+        let response =
+            reqwest::blocking::get(&url);
+
+        if let Ok(resp) = response {
+
+            if resp.status().is_success() {
+
+                let text =
+                    resp.text()
+                        .map_err(|e| e.to_string())?;
+
+                fs::write(
+                    &cache_file,
+                    &text
+                ).ok();
+
+                return Ok(text);
+            }
+        }
+    }
+
+    Err(
+        "Documentação não encontrada"
+            .into()
+    )
 }
 
 #[tauri::command]
@@ -786,6 +829,67 @@ fn get_command_help(
     Ok(data)
 }
 
+#[tauri::command]
+fn has_internet() -> bool {
+
+    reqwest::blocking::get(
+        "https://raw.githubusercontent.com"
+    ).is_ok()
+}
+
+fn get_tldr_cache_dir() -> PathBuf {
+
+    let mut path =
+        cache_dir()
+            .unwrap_or_else(|| ".".into());
+
+    path.push(
+        "hoheckell-command-palette"
+    );
+
+    path.push("tldr");
+
+    fs::create_dir_all(&path).ok();
+
+    path
+}
+
+#[tauri::command]
+fn has_xdotool() -> bool {
+
+    Command::new("which")
+        .arg("xdotool")
+        .output()
+        .map(|o| o.status.success())
+        .unwrap_or(false)
+}
+
+#[tauri::command]
+fn install_xdotool()
+-> Result<(), String> {
+
+    let output = Command::new("pkexec")
+        .args([
+            "apt",
+            "install",
+            "-y",
+            "xdotool"
+        ])
+        .output()
+        .map_err(|e| e.to_string())?;
+
+    if !output.status.success() {
+
+        return Err(
+            String::from_utf8_lossy(
+                &output.stderr
+            ).to_string()
+        );
+    }
+
+    Ok(())
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -810,6 +914,9 @@ pub fn run() {
             delete_saved_command,
             toggle_favorite,
             get_command_help,
+            has_internet,
+            has_xdotool,
+            install_xdotool,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

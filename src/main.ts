@@ -11,73 +11,46 @@ import { openCommandBuilderModal } from './features/builder/command-builder-moda
 import { openSavedModal } from './features/modal/saved-modal'
 import { appShellHtml } from './app-shell'
 import { getAppDomRefs } from './dom-refs'
-import { tauriApi } from './services/tauri-api' 
+import { tauriApi } from './services/tauri-api'
+import { showToast } from './services/toast' 
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = appShellHtml
 async function checkTldr() {
-  console.log('Carregando TLDR')
-  const installed =
-    await tauriApi.hasTldr()
 
-  if (installed) {
+  const online = await tauriApi.hasInternet()
+
+  if (online) {
 
     tldrStatus.innerHTML = `
+
       <div class="tldr-row">
 
         <span class="dot green"></span>
 
         <span>
-          TLDR instalado
+          TLDR online disponível
         </span>
 
       </div>
     `
 
-    return
-  }
+  } else {
 
-  tldrStatus.innerHTML = `
-    <div class="tldr-row">
+    tldrStatus.innerHTML = `
 
-      <span class="dot red"></span>
+      <div class="tldr-row">
 
-      <span>
-        TLDR não instalado (NPM é necessário)
-      </span>
+        <span class="dot yellow"></span>
 
-      <button id="install-tldr">
-        Instalar
-      </button>
+        <span>
+          Modo offline
+        </span>
 
-    </div>
-  `
-
-  const installButton = document.querySelector('#install-tldr') as HTMLButtonElement
-
-  installButton.onclick = async () => {
-
-    installButton.innerText =
-      'Instalando...'
-
-    installButton.disabled = true
-
-    try {
-
-      await tauriApi.installTldr()
-
-      await checkTldr()
-
-    } catch (err) {
-
-      console.error(err)
-
-      installButton.innerText =
-        'Erro'
-
-      alert(String(err))
-    }
+      </div>
+    `
   }
 }
+
 
 const {
   viewSavedHistoryButton,
@@ -135,7 +108,18 @@ function getVisibleCommands() {
     return allCommands
   }
 
-  return fuse.search(value).map(r => r.item)
+  const results = fuse.search(value).map(r => r.item)
+  if(results.length > 0) {
+    getAppDomRefs().searchTldrButton.classList.add('hidden')    
+  } else {
+    getAppDomRefs().searchTldrButton.classList.remove('hidden')
+  }
+
+  getAppDomRefs().searchTldrButton.onclick = async () => { 
+    await showCommandHelp(commandHelp, value)
+  }
+
+  return results
 }
 
 function rerenderCurrentList() {
@@ -188,15 +172,15 @@ function bindEvents() {
   })
 
   captureButton.onclick = async () => {
-    captureButton.innerText = 'Clique no terminal...'
+    showToast('Clique no terminal que deseja conectar...', 'info')
 
     setTimeout(async () => {
       try {
         const id = await tauriApi.saveTerminalWindow()
-        captureButton.innerText = `Terminal conectado (${id})`
+        showToast(`Terminal conectado (${id})`, 'success')
       } catch (err) {
         console.error(err)
-        captureButton.innerText = 'Erro ao conectar'
+        showToast('Erro ao conectar no terminal', 'error')
       }
     }, 3000)
   }
@@ -204,7 +188,7 @@ function bindEvents() {
   disconnectButton.onclick = async () => {
     try {
       await tauriApi.disconnectTerminal()
-      captureButton.innerText = 'Capturar terminal'
+      showToast('Terminal desconectado', 'info')
     } catch (err) {
       console.error(err)
     }
@@ -369,8 +353,22 @@ function checkAI() {
           IA configurada
         </span>
 
+        <button id="change-ai-key">
+          Alterar
+        </button>
+
       </div>
     `
+
+    const changeBtn = document.querySelector('#change-ai-key') as HTMLButtonElement | null
+
+    if (changeBtn) {
+
+      changeBtn.onclick = () => {
+
+        openAIConfig()
+      }
+    }
 
   } else {
 
@@ -403,10 +401,98 @@ function checkAI() {
   }
 }
 
+async function checkXdotool() {
+
+  const installed = await tauriApi.hasXdotool()
+
+  if (installed) {
+
+    getAppDomRefs().terminalStatus.innerHTML = `
+
+      <div class="tldr-row">
+
+        <span class="dot green"></span>
+
+        <span>
+          Execução terminal disponível
+        </span>
+
+      </div>
+    `
+
+    return;
+  }
+
+  getAppDomRefs().terminalStatus.innerHTML = `
+
+    <div class="tldr-row">
+
+      <span class="dot red"></span>
+
+      <span>
+        xdotool não instalado
+      </span>
+
+      <button id="install-xdotool">
+
+        Instalar
+
+      </button>
+
+    </div>
+  `
+
+  const button =
+    document.querySelector(
+      '#install-xdotool'
+    ) as HTMLButtonElement | null
+
+  if (button) {
+
+    button.onclick = async () => {
+
+      button.innerText =
+        'Instalando...'
+
+      try {
+
+        await tauriApi.installXdotool()
+
+        await checkXdotool()
+
+      } catch (err) {
+
+        console.error(err)
+
+        button.innerText =
+          'Erro'
+      }
+    }
+  }
+}
+
+document
+  .querySelectorAll('.help-command')
+  .forEach(button => {
+
+    button.addEventListener(
+      'click',
+      async () => {
+
+        const command =
+          (button as HTMLButtonElement)
+            .dataset.command
+
+        if (!command) return;
+      }
+    );
+  });
+
 function bootstrap() {
   setupTheme()
   bindEvents()
   checkTldr()
+  checkXdotool()
   checkAI()
   loadHistory()
 }

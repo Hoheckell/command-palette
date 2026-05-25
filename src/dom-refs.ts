@@ -15,6 +15,8 @@ export interface AppDomRefs {
   saveHistoryButton: HTMLButtonElement
   themeToggle: HTMLInputElement
   aiStatus: HTMLDivElement
+  terminalStatus: HTMLDivElement
+  searchTldrButton: HTMLButtonElement
 }
 
 export function getAppDomRefs(): AppDomRefs {
@@ -34,6 +36,8 @@ export function getAppDomRefs(): AppDomRefs {
     searchInput: document.querySelector('#search') as HTMLInputElement,
     saveHistoryButton: document.querySelector('#save-history') as HTMLButtonElement,
     themeToggle: document.querySelector('#theme-toggle') as HTMLInputElement,
-    aiStatus: document.querySelector('#ai-status') as HTMLDivElement
+    aiStatus: document.querySelector('#ai-status') as HTMLDivElement,
+    terminalStatus: document.querySelector('#terminal-status') as HTMLDivElement,
+    searchTldrButton: document.querySelector('#search-tldr-button') as HTMLButtonElement
   }
 }

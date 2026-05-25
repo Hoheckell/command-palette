@@ -65,12 +65,6 @@ export const appShellHtml = `
 >
   🧱
 </button>
-<button
-  id="configure-ai"
-  title="Configurar OpenRouter"
->
-  🤖
-</button>
     <label class="theme-switch">
 
   <input
@@ -87,6 +81,7 @@ export const appShellHtml = `
   </section>
 
   <div id="tldr-status"></div>
+  <div id="terminal-status"></div>
   <div id="ai-status"></div>
   <section class="search-section">
 
@@ -94,6 +89,12 @@ export const appShellHtml = `
       id="search"
       placeholder="Buscar comandos..."
     />
+     <button
+    id="search-tldr-button"
+    class="hidden"
+  >
+    📖 Buscar TLDR
+  </button>
 
   </section>
 
@@ -104,6 +105,8 @@ export const appShellHtml = `
     <ul id="history"></ul>
 
   </section>
+
+  <div id="toast-container"></div>
 
   <div id="app-help"></div>
   <div id="saved-modal"></div>
