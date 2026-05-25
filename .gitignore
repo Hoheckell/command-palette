@@ -7,31 +7,15 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-# Dependencies
-node_modules/
-
-# Frontend build artifacts
-dist/
-dist-ssr/
-.vite/
+node_modules
+dist
+dist-ssr
 *.local
-
-# Test and coverage artifacts
-coverage/
-playwright-report/
-test-results/
-
-# Environment and local data
-.env
-.env.*
-!.env.example
-command_palette.db
-*.db
 
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
-.idea/
+.idea
 .DS_Store
 *.suo
 *.ntvs*
