@@ -21,19 +21,23 @@
     "test": "npm run test:unit && npm run test:e2e"
   },
   "dependencies": {
+    "@openrouter/sdk": "^0.12.35",
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-fs": "^2.5.1",
     "@tauri-apps/plugin-opener": "^2",
     "fuse.js": "^7.3.0",
-    "lucide": "^1.16.0"
+    "lucide": "^1.16.0",
+    "openai": "^6.39.0",
+    "openrtk": "^0.1.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.60.0",
     "@tauri-apps/cli": "^2.11.2",
+    "@types/node": "^25.9.1",
+    "@vitest/coverage-v8": "^3.2.4",
+    "jsdom": "^26.1.0",
     "typescript": "~5.6.2",
     "vite": "^6.0.3",
-    "vitest": "^3.2.4",
-    "@vitest/coverage-v8": "^3.2.4",
-    "jsdom": "^26.1.0"
+    "vitest": "^3.2.4"
   }
 }

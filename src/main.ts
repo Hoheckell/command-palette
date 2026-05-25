@@ -11,7 +11,7 @@ import { openCommandBuilderModal } from './features/builder/command-builder-moda
 import { openSavedModal } from './features/modal/saved-modal'
 import { appShellHtml } from './app-shell'
 import { getAppDomRefs } from './dom-refs'
-import { tauriApi } from './services/tauri-api'
+import { tauriApi } from './services/tauri-api' 
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = appShellHtml
 async function checkTldr() {
@@ -42,7 +42,7 @@ async function checkTldr() {
       <span class="dot red"></span>
 
       <span>
-        TLDR não instalado
+        TLDR não instalado (NPM é necessário)
       </span>
 
       <button id="install-tldr">
@@ -267,10 +267,147 @@ async function loadHistory() {
   rerenderCurrentList()
 }
 
+function openAIConfig() {
+
+  helpContainer.innerHTML = `
+
+    <div class="help-overlay">
+
+      <div class="help-modal">
+
+        <div class="help-modal-top">
+
+          <h2>
+            Configurar IA
+          </h2>
+
+          <button id="close-ai-config">
+            ✕
+          </button>
+
+        </div>
+
+        <div class="help-content">
+
+          <p>
+            Informe sua API key OpenRouter.
+          </p>
+
+          <p>
+            Modelos gratuitos serão usados.
+          </p>
+
+          <input
+            id="openrouter-key"
+            type="password"
+            placeholder="sk-or-..."
+          />
+
+          <button id="save-openrouter-key">
+            Salvar
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+  `
+
+  attachAIConfigEvents()
+}
+function attachAIConfigEvents() {
+
+  const close = document.querySelector('#close-ai-config') as HTMLButtonElement | null
+
+  if (close) {
+
+    close.onclick = () => {
+
+      helpContainer.innerHTML = ''
+    }
+  }
+
+  const save = document.querySelector('#save-openrouter-key') as HTMLButtonElement | null
+
+  if (save) {
+
+    save.onclick = () => {
+
+      const input = document.querySelector('#openrouter-key') as HTMLInputElement | null
+
+      if (!input) return;
+
+      localStorage.setItem(
+        'openrouter_api_key',
+        input.value
+      )
+
+      helpContainer.innerHTML = ''
+
+      checkAI()
+    }
+  }
+}
+
+function checkAI() {
+
+  const hasKey =
+    !!localStorage.getItem(
+      'openrouter_api_key'
+    )
+
+  if (hasKey) {
+
+    getAppDomRefs().aiStatus.innerHTML = `
+
+      <div class="tldr-row">
+
+        <span class="dot green"></span>
+
+        <span>
+          IA configurada
+        </span>
+
+      </div>
+    `
+
+  } else {
+
+    getAppDomRefs().aiStatus.innerHTML = `
+
+      <div class="tldr-row">
+
+        <span class="dot red"></span>
+
+        <span>
+          IA não configurada
+        </span>
+
+        <button id="setup-ai">
+          Configurar
+        </button>
+
+      </div>
+    `
+
+    const button = document.querySelector('#setup-ai') as HTMLButtonElement | null
+
+    if (button) {
+
+      button.onclick = () => {
+
+        openAIConfig()
+      }
+    }
+  }
+}
+
 function bootstrap() {
   setupTheme()
   bindEvents()
   checkTldr()
+  checkAI()
   loadHistory()
 }
 

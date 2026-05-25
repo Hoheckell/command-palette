@@ -41,7 +41,35 @@ export function openAppHelp(helpContainer: HTMLDivElement) {
           </p>
 
           <p>
-            Ela permite pesquisar, estudar, salvar e executar comandos rapidamente.
+            Ela permite pesquisar, estudar, montar comandos visualmente, salvar e executar comandos rapidamente.
+          </p>
+
+          <hr />
+
+          <h3>
+            Busca Fuzzy
+          </h3>
+
+          <p>
+            A barra de pesquisa usa busca fuzzy (Fuse.js) para encontrar comandos mesmo com digitação parcial ou aproximada.
+          </p>
+
+          <p>
+            Quanto mais relevante o comando, mais acima ele aparece nos resultados.
+          </p>
+
+          <hr />
+
+          <h3>
+            Favoritos
+          </h3>
+
+          <p>
+            Clique no ícone de estrela (★) ao lado de um comando para favoritá-lo.
+          </p>
+
+          <p>
+            Comandos favoritados aparecem sempre no topo da lista e ficam salvos entre sessões.
           </p>
 
           <hr />
@@ -59,6 +87,10 @@ export function openAppHelp(helpContainer: HTMLDivElement) {
           </p>
 
           <p>
+            Você pode verificar o status do TLDR no canto inferior direito e instalar diretamente pela interface se necessário.
+          </p>
+
+          <p>
             Exemplo:
           </p>
 
@@ -71,23 +103,34 @@ docker logs -f api
           <hr />
 
           <h3>
-            Por que instalar TLDR?
+            Explicação com IA
           </h3>
 
           <p>
-            Sem TLDR a aplicação apenas lista comandos.
+            Ao visualizar a documentação de um comando, clique em "Explicação aprofundada" para obter uma análise detalhada gerada por IA.
           </p>
 
           <p>
-            Com TLDR você recebe:
+            A aplicação usa OpenRouter com diversos modelos gratuitos em cadeia de fallback. Para usar, configure sua chave de API no botão "Configurar" na barra inferior.
           </p>
 
-          <ul>
-            <li>descrições</li>
-            <li>exemplos</li>
-            <li>ajuda rápida</li>
-            <li>documentação simplificada</li>
-          </ul>
+          <hr />
+
+          <h3>
+            Construtor de Comandos
+          </h3>
+
+          <p>
+            O "Construtor de Comandos" (ícone de engrenagem) permite montar comandos visualmente.
+          </p>
+
+          <p>
+            Digite o comando base (ex: ssh, docker, ffmpeg), clique em "Carregar flags" e selecione as opções desejadas com checkboxes.
+          </p>
+
+          <p>
+            Você pode copiar, executar ou salvar o comando montado.
+          </p>
 
           <hr />
 
@@ -96,7 +139,7 @@ docker logs -f api
           </h3>
 
           <p>
-            Clique em "Capturar terminal".
+            Clique em "Capturar terminal" na barra inferior.
           </p>
 
           <p>
@@ -144,25 +187,43 @@ docker logs -f api
           </h3>
 
           <p>
-            A lista principal é carregada do histórico do shell Linux.
+            A lista principal é carregada do histórico do shell Linux (~/.bash_history).
           </p>
 
           <p>
-            Comandos repetidos podem ser filtrados automaticamente.
+            Comandos repetidos são filtrados automaticamente.
+          </p>
+
+          <p>
+            Você também pode acessar "Histórico salvo" para ver comandos que foram persistidos no banco de dados.
           </p>
 
           <hr />
 
           <h3>
-            Biblioteca local
+            Biblioteca local (SQLite)
           </h3>
 
           <p>
-            Você pode salvar comandos e documentações em SQLite local.
+            Você pode salvar comandos e documentações no SQLite local clicando no ícone de disquete.
           </p>
 
           <p>
             Isso transforma o histórico temporário em uma biblioteca pessoal persistente.
+          </p>
+
+          <p>
+            Acesse "Comandos salvos" para visualizar, executar ou deletar itens da sua biblioteca.
+          </p>
+
+          <hr />
+
+          <h3>
+            Tema claro/escuro
+          </h3>
+
+          <p>
+            Alterne entre tema claro e escuro usando o checkbox na barra superior. Sua preferência é lembrada entre sessões.
           </p>
 
           <hr />
@@ -186,7 +247,7 @@ docker logs -f api
           </h3>
 
           <p>
-            O objetivo é criar uma memória operacional pesquisável para terminal Linux.
+            O objetivo é criar uma memória operacional pesquisável para terminal Linux, combinando histórico, documentação TLDR, explicações por IA e um construtor visual de comandos.
           </p>
 
         </div>

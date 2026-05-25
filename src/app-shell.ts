@@ -65,6 +65,12 @@ export const appShellHtml = `
 >
   🧱
 </button>
+<button
+  id="configure-ai"
+  title="Configurar OpenRouter"
+>
+  🤖
+</button>
     <label class="theme-switch">
 
   <input
@@ -81,7 +87,7 @@ export const appShellHtml = `
   </section>
 
   <div id="tldr-status"></div>
-
+  <div id="ai-status"></div>
   <section class="search-section">
 
     <input

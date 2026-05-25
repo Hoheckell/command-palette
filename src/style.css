@@ -306,6 +306,10 @@ pre {
 .light-theme .help-loading-badge {
   color: #24548e;
 }
+
+.light-theme .tldr-row {
+  background: #e8edf5;
+}
 .saved-overlay {
   position: fixed;
   inset: 0;
@@ -515,4 +519,7 @@ pre {
   .builder-flag-value {
     grid-column: 2 / -1;
   }
+}
+.yellow {
+  background: #eab308;
 }

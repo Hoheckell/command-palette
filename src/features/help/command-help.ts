@@ -1,3 +1,4 @@
+import { explainCommand } from '../../ai'
 import { tauriApi } from '../../services/tauri-api'
 
 function escapeHtml(value: string) {
@@ -70,6 +71,10 @@ export async function showCommandHelp(commandHelp: HTMLDivElement, cmd: string) 
         </div>
         <div class="help-content">
           <pre>${escapeHtml(content)}</pre>
+          <button id="deep-explanation">
+            Explicação aprofundada
+          </button>
+          <div id="deep-explanation-content"></div>
         </div>
       </div>
     </div>
@@ -104,6 +109,51 @@ export async function showCommandHelp(commandHelp: HTMLDivElement, cmd: string) 
         }
       }
     }
+    const deepButton = commandHelp.querySelector('#deep-explanation') as HTMLButtonElement | null
+    
+    if (deepButton) {
+
+      deepButton.onclick = async () => {
+
+    const container =
+      commandHelp.querySelector(
+        '#deep-explanation-content'
+      ) as HTMLDivElement | null
+
+    if (!container) return;
+
+    container.innerHTML = `
+      Gerando explicação...
+    `
+
+    try {
+
+      const explanation =
+        await explainCommand(
+          cmd,
+          content
+        )
+
+      container.innerHTML = `
+        <div class="deep-help">
+
+          <pre>
+${explanation}
+          </pre>
+
+        </div>
+      `
+
+    } catch (err) {
+
+      console.error(err)
+
+      container.innerHTML = `
+        Erro ao gerar explicação.
+      `
+    }
+  }
+}
   } catch (error) {
     console.warn('Falha ao carregar TLDR para comando:', baseCommand, error)
     commandHelp.innerHTML = `

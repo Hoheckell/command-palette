@@ -75,8 +75,8 @@ describe('command-builder-modal', () => {
       command: 'ssh',
       help_text: 'usage: ssh',
       flags: [
-        { flag: '-p', description: 'Port to connect to', requires_value: true },
-        { flag: '-v', description: 'Verbose mode', requires_value: false }
+        { flag: '-p', description: 'Port to connect to', requires_value: true, example: '-p 22' },
+        { flag: '-v', description: 'Verbose mode', requires_value: false, example: '-v' }
       ]
     }
 
@@ -101,7 +101,7 @@ describe('command-builder-modal', () => {
       command: 'ssh',
       help_text: 'usage: ssh',
       flags: [
-        { flag: '-v', description: 'Verbose mode', requires_value: false }
+        { flag: '-v', description: 'Verbose mode', requires_value: false, example: '-v' }
       ]
     }
 
