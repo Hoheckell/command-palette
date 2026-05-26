@@ -15,8 +15,10 @@ describe('tauri-api', () => {
   it('routes methods to invoke with expected command names', async () => {
     invoke.mockResolvedValue(undefined)
 
-    await tauriApi.hasTldr()
-    await tauriApi.installTldr()
+    await tauriApi.hasInternet()
+    await tauriApi.installXdotool()
+    await tauriApi.hasXdotool()
+    await tauriApi.detectPackageManager()
     await tauriApi.getHistory()
     await tauriApi.saveHistory(['ls'])
     await tauriApi.saveCommand('ls', 'help', 'history')
@@ -29,8 +31,10 @@ describe('tauri-api', () => {
     await tauriApi.getTldr('ls')
     await tauriApi.getCommandHelp('ssh')
 
-    expect(invoke).toHaveBeenCalledWith('has_tldr')
-    expect(invoke).toHaveBeenCalledWith('install_tldr')
+    expect(invoke).toHaveBeenCalledWith('has_internet')
+    expect(invoke).toHaveBeenCalledWith('has_xdotool')
+    expect(invoke).toHaveBeenCalledWith('detect_package_manager')
+    expect(invoke).toHaveBeenCalledWith('install_xdotool')
     expect(invoke).toHaveBeenCalledWith('get_history')
     expect(invoke).toHaveBeenCalledWith('save_history', { commands: ['ls'] })
     expect(invoke).toHaveBeenCalledWith('save_command', { command: 'ls', help: 'help', source: 'history' })

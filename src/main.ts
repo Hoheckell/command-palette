@@ -334,6 +334,47 @@ function attachAIConfigEvents() {
   }
 }
 
+function checkSystem() {
+    tauriApi.detectPackageManager().then((packageManager) => {
+      if (packageManager == "apt") {
+        getAppDomRefs().systemDetect.innerHTML = `
+          <div class="tldr-row">
+            <span class="dot green"></span>
+            <span>Sistema: Ubuntu/Debian (${packageManager})</span>
+          </div>
+        `
+      } else if (packageManager == "dnf") {
+        getAppDomRefs().systemDetect.innerHTML = `
+          <div class="tldr-row">
+            <span class="dot green"></span>
+            <span>Sistema: Fedora/RHEL (${packageManager})</span>
+          </div>
+        `
+      } else if (packageManager == "pacman") {
+        getAppDomRefs().systemDetect.innerHTML = `
+          <div class="tldr-row">
+            <span class="dot green"></span>
+            <span>Sistema: Arch Linux (${packageManager})</span>
+          </div>
+        `
+      } else if (packageManager == "zypper") {
+        getAppDomRefs().systemDetect.innerHTML = `
+          <div class="tldr-row">
+            <span class="dot green"></span>
+            <span>Sistema: SUSE/openSUSE (${packageManager})</span>
+          </div>
+        `
+      } else {
+        getAppDomRefs().systemDetect.innerHTML = `
+          <div class="tldr-row">
+            <span class="dot red"></span>
+            <span>Sistema: Desconhecido</span>
+          </div>
+        `
+      }
+    })
+  }
+
 function checkAI() {
 
   const hasKey =
@@ -494,6 +535,7 @@ function bootstrap() {
   checkTldr()
   checkXdotool()
   checkAI()
+  checkSystem()
   loadHistory()
 }
 

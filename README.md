@@ -61,6 +61,7 @@ npm run test:ci
 - Build alvo: `x86_64-unknown-linux-gnu`
 - Pacotes publicados no GitHub Release:
   - `.deb`
+  - `.rpm`
   - `.AppImage`
 
 ### Como publicar

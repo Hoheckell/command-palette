@@ -33,3 +33,11 @@ src-tauri/target/
 *.msi
 *.tar.gz
 *.zip
+
+# Test and coverage artifacts
+coverage/
+playwright-report/
+test-results/
+
+# Local runtime data
+*.db

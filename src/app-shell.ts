@@ -83,6 +83,7 @@ export const appShellHtml = `
   <div id="tldr-status"></div>
   <div id="terminal-status"></div>
   <div id="ai-status"></div>
+  <div id="system-detect"></div>
   <section class="search-section">
 
     <input

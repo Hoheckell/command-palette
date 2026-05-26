@@ -421,17 +421,6 @@ fn get_history() -> Vec<String> {
 }
 
 #[tauri::command]
-fn has_tldr() -> bool {
-    let output = Command::new("tldr").arg("ls").output();
-
-    match output {
-        Ok(result) => result.status.success(),
-
-        Err(_) => false,
-    }
-}
-
-#[tauri::command]
 fn get_tldr(
     command: String
 ) -> Result<String, String> {
@@ -491,33 +480,6 @@ fn get_tldr(
         "Documentação não encontrada"
             .into()
     )
-}
-
-#[tauri::command]
-fn install_tldr() -> Result<(), String> {
-    let install = Command::new("pkexec")
-        .args(["npm", "install", "-g", "tldr"])
-        .output()
-        .map_err(|e| e.to_string())?;
-
-    if !install.status.success() {
-        let err = String::from_utf8_lossy(&install.stderr).to_string();
-
-        return Err(err);
-    }
-
-    let update = Command::new("tldr")
-        .arg("--update")
-        .output()
-        .map_err(|e| e.to_string())?;
-
-    if !update.status.success() {
-        let err = String::from_utf8_lossy(&update.stderr).to_string();
-
-        return Err(err);
-    }
-
-    Ok(())
 }
 
 #[tauri::command]
@@ -864,19 +826,58 @@ fn has_xdotool() -> bool {
         .unwrap_or(false)
 }
 
-#[tauri::command]
-fn install_xdotool()
--> Result<(), String> {
+fn install_package(
+    package: &str
+) -> Result<(), String> {
 
-    let output = Command::new("pkexec")
-        .args([
-            "apt",
-            "install",
-            "-y",
-            "xdotool"
-        ])
-        .output()
-        .map_err(|e| e.to_string())?;
+    let manager =
+        detect_package_manager();
+
+    let args: Vec<&str> =
+        match manager.as_str() {
+
+            "apt" => vec![
+                "apt",
+                "install",
+                "-y",
+                package
+            ],
+
+            "dnf" => vec![
+                "dnf",
+                "install",
+                "-y",
+                package
+            ],
+
+            "zypper" => vec![
+                "zypper",
+                "install",
+                "-y",
+                package
+            ],
+
+            "pacman" => vec![
+                "pacman",
+                "-S",
+                "--noconfirm",
+                package
+            ],
+
+            _ => {
+
+                return Err(
+                    "Distribuição não suportada"
+                        .into()
+                );
+            }
+        };
+
+    let output =
+        Command::new("pkexec")
+            .args(args)
+            .output()
+            .map_err(|e| e.to_string())?;
 
     if !output.status.success() {
 
@@ -888,6 +889,48 @@ fn install_xdotool()
     }
 
     Ok(())
+}
+
+#[tauri::command]
+fn detect_package_manager() -> String {
+
+    let content =
+        std::fs::read_to_string(
+            "/etc/os-release"
+        ).unwrap_or_default();
+
+    if content.contains("ID=ubuntu")
+        || content.contains("ID=debian")
+        || content.contains("ID=linuxmint")
+    {
+        return "apt".into();
+    }
+
+    if content.contains("ID=fedora") {
+
+        return "dnf".into();
+    }
+
+    if content.contains("ID=opensuse")
+        || content.contains("ID=sles")
+    {
+        return "zypper".into();
+    }
+
+    if content.contains("ID=arch")
+        || content.contains("ID=manjaro")
+    {
+        return "pacman".into();
+    }
+
+    "unknown".into()
+}
+
+#[tauri::command]
+fn install_xdotool()
+-> Result<(), String> {
+
+    install_package("xdotool")
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -903,8 +946,6 @@ pub fn run() {
             run_saved_command,
             save_terminal_window,
             disconnect_terminal,
-            has_tldr,
-            install_tldr,
             get_tldr,
             save_command,
             save_history,
@@ -917,6 +958,7 @@ pub fn run() {
             has_internet,
             has_xdotool,
             install_xdotool,
+            detect_package_manager
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
