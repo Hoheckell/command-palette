@@ -60,10 +60,23 @@ jobs:
             libxdo-dev \
             libssl-dev \
             libayatana-appindicator3-dev \
-            librsvg2-dev
+            librsvg2-dev \
+            rpm \
+            rpm2cpio \
+            librpm-dev
+
+          # Fallback: em alguns runners, rpm instala mas rpmbuild não aparece no PATH.
+          if ! command -v rpmbuild >/dev/null 2>&1; then
+            sudo apt-get install -y rpm-build || true
+          fi
 
       - name: Install npm dependencies
         run: npm ci
+
+      - name: Check rpmbuild
+        run: |
+          which rpmbuild
+          rpmbuild --version
 
       - name: Build Linux bundles
         run: npm run tauri build -- --target x86_64-unknown-linux-gnu --bundles deb,appimage
