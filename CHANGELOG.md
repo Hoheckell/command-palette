@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.3.0] - 2026-05-26
+
+### Adicionado
+
+- Suporte a empacotamento Linux em `.rpm` no pipeline de release
+- Detecção automática do gerenciador de pacotes Linux (`apt`, `dnf`, `zypper`, `pacman`)
+- Exibição do sistema detectado na interface para orientar instalação de dependências
+
+### Alterado
+
+- Instalação de `xdotool` agora usa o gerenciador de pacotes detectado, permitindo uso em distribuições baseadas em `.rpm`
+- Bundle Linux ajustado para gerar `.deb`, `.rpm` e `.AppImage`
+
+### Removido
+
+- Comando Tauri órfão `get_system_info`
+
 ## [0.2.0] - 2026-05-25
 
 ### Adicionado
@@ -9,7 +26,7 @@
 
 ### Alterado
 
-- Seção de ajuda "O que é TLDR?" atualizada para "Documentação TLDR" — remove menção de instalação, esclarece que a documentação é obtida via API automaticamente
+- Seção de ajuda "O que é TLDR?" atualizada para "Documentação TLDR" - remove menção de instalação, esclarece que a documentação é obtida via API automaticamente
 - Objetivo do projeto na ajuda atualizado para refletir documentação TLDR automática via API
 
 ## [0.1.0] - 2026-05-23

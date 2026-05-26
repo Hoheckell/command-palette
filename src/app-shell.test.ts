@@ -14,5 +14,6 @@ describe('app-shell', () => {
     expect(document.querySelector('#saved-modal')).toBeTruthy()
     expect(document.querySelector('#builder-modal')).toBeTruthy()
     expect(document.querySelector('#search-tldr-button')).toBeTruthy()
+    expect(document.querySelector('#system-detect')).toBeTruthy()
   })
 })

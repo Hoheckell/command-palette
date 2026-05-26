@@ -27,5 +27,6 @@ describe('dom-refs', () => {
     expect(refs.captureButton.id).toBe('capture-terminal')
     expect(refs.disconnectButton.id).toBe('disconnect-terminal')
     expect(refs.searchTldrButton.id).toBe('search-tldr-button')
+    expect(refs.systemDetect.id).toBe('system-detect')
   })
 })

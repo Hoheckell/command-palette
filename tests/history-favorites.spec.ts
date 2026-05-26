@@ -11,7 +11,9 @@ function createTauriMockScript() {
     // @ts-expect-error browser test mock
     window.__TAURI_INTERNALS__ = {
       invoke: async (cmd: string, args?: Record<string, unknown>) => {
-        if (cmd === 'has_tldr') return true
+        if (cmd === 'has_internet') return true
+        if (cmd === 'has_xdotool') return true
+        if (cmd === 'detect_package_manager') return 'apt'
         if (cmd === 'get_history') return store.history
 
         if (cmd === 'get_saved_commands') {
