@@ -12,6 +12,7 @@
 
 - Instalação de `xdotool` agora usa o gerenciador de pacotes detectado, permitindo uso em distribuições baseadas em `.rpm`
 - Bundle Linux ajustado para gerar `.deb`, `.rpm` e `.AppImage`
+- Workflows GitHub Actions endurecidos com pinagem por SHA para `actions/checkout`, `actions/setup-node` e `actions/upload-artifact`, com validação CI para bloquear @v4 e referências sem pinagem
 
 ### Removido
 
