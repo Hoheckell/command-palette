@@ -29,9 +29,14 @@ O objetivo é permitir que usuários Linux possam:
 
 ### Histórico pesquisável
 
-Busca instantânea no histórico Bash/ZSH.
+Busca instantânea no histórico Bash/ZSH.<img width="513" height="116" alt="tldr" src="https://github.com/user-attachments/assets/ceded863-b908-46f7-9bbd-2798dead5164" />
+<img width="513" height="116" alt="tldr" src="https://github.com/user-attachments/assets/015289a7-c65d-40eb-8d7c-11bba610eebf" />
+<img width="513" height="116" alt="tldr" src="https://github.com/user-attachments/assets/39475143-a806-4c10-9ceb-d1a0f29dd29d" />
+<img width="513" height="116" alt="tldr" src="https://github.com/user-attachments/assets/4cf8842d-9dbf-4074-aa6d-88b5defd63ec" />
 
-![Busca](./screenshots/search.png)
+
+
+![Busca](https://github.com/user-attachments/assets/7b3025ab-a2a5-4bc9-9e9b-b571d37408d6)
 
 ---
 
@@ -57,7 +62,7 @@ Busca automática das páginas oficiais TLDR:
 - cache local automático
 - funcionamento offline após primeiro acesso
 
-![TLDR](./screenshots/tldr.png)
+![TLDR](https://github.com/user-attachments/assets/9c1d4ca7-9951-435b-86cb-148342fbfdd5)
 
 ---
 
