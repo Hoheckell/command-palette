@@ -1,15 +1,18 @@
 import type { FavoritesStore } from './favorites-store'
 import type { SavedCommandsCache } from './saved-commands-cache'
+import type { HiddenCommandsCache } from './hidden-commands.cache'
 
 interface RenderHistoryListDeps {
   historyList: HTMLUListElement
   favoritesStore: FavoritesStore
   savedCommandsCache: SavedCommandsCache
+  hiddenCommandsCache: HiddenCommandsCache
   onSaveCommand: (command: string) => Promise<void>
   onDeleteCommand: (id: number) => Promise<void>
   onRunCommand: (command: string) => Promise<void>
   onShowCommandHelp: (command: string) => Promise<void>
   onFavoriteAdded: (command: string) => Promise<void>
+  onHideCommand: (command: string) => Promise<void>
   onAfterStateChange: () => void
 }
 
@@ -18,11 +21,13 @@ export function renderHistoryList(commands: string[], deps: RenderHistoryListDep
     historyList,
     favoritesStore,
     savedCommandsCache,
+    hiddenCommandsCache,
     onSaveCommand,
     onDeleteCommand,
     onRunCommand,
     onShowCommandHelp,
     onFavoriteAdded,
+    onHideCommand,
     onAfterStateChange
   } = deps
 
@@ -30,6 +35,9 @@ export function renderHistoryList(commands: string[], deps: RenderHistoryListDep
 
   favoritesStore.sort(commands).forEach(command => {
     if (!command.trim()) return
+    if (hiddenCommandsCache.has(command)) {
+      return
+    }
 
     const li = document.createElement('li')
     const isFavorite = favoritesStore.isFavorite(command)
@@ -172,6 +180,22 @@ runButton.onclick =
       }
     }
 
+    const hideButton = document.createElement('button')
+    hideButton.className = 'hide-button'
+    hideButton.innerText = '🙈'
+    hideButton.title = 'Esconder comando'
+
+    hideButton.onclick = async event => {
+      event.stopPropagation()
+
+      try {
+        await onHideCommand(command)
+        onAfterStateChange()
+      } catch (err) {
+        console.error(err)
+      }
+    }
+
     row.appendChild(text)
 
 const actions =
@@ -187,6 +211,8 @@ actions.appendChild(runButton)
 actions.appendChild(favoriteButton)
 
 actions.appendChild(saveButton)
+
+actions.appendChild(hideButton)
 
 row.appendChild(actions)
     li.appendChild(row)

@@ -60,5 +60,22 @@ export const tauriApi = {
 
   getCommandHelp(command: string) {
     return invoke<CommandHelpData>('get_command_help', { command })
+  },
+  
+  getHiddenCommands() {
+    return invoke<string[]>('get_hidden_commands')
+  },
+  
+  unhideCommand(command: string) {
+    return invoke('unhide_command', { command })
+  },
+  
+  hideCommand(command: string) {
+    return invoke('hide_command', { command })
+  },
+  
+  getSavedHelps() {
+    return invoke<CommandHelpData[]>('get_saved_helps')
   }
+  
 }

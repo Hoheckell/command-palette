@@ -31,7 +31,7 @@ O objetivo é permitir que usuários Linux possam:
 
 Busca instantânea no histórico Bash/ZSH.
 
-![Busca](./screenshots/search.png)
+![Busca](https://github.com/user-attachments/assets/7b3025ab-a2a5-4bc9-9e9b-b571d37408d6)
 
 ---
 
@@ -57,7 +57,7 @@ Busca automática das páginas oficiais TLDR:
 - cache local automático
 - funcionamento offline após primeiro acesso
 
-![TLDR](./screenshots/tldr.png)
+![TLDR](https://github.com/user-attachments/assets/9c1d4ca7-9951-435b-86cb-148342fbfdd5)
 
 ---
 

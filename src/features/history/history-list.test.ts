@@ -21,11 +21,13 @@ describe('history-list', () => {
       historyList,
       favoritesStore,
       savedCommandsCache: cache,
+      hiddenCommandsCache: { has: vi.fn().mockReturnValue(false) } as any,
       onSaveCommand: vi.fn().mockResolvedValue(undefined),
       onDeleteCommand: vi.fn().mockResolvedValue(undefined),
       onRunCommand: vi.fn().mockResolvedValue(undefined),
       onShowCommandHelp: vi.fn().mockResolvedValue(undefined),
       onFavoriteAdded: vi.fn().mockResolvedValue(undefined),
+      onHideCommand: vi.fn().mockResolvedValue(undefined),
       onAfterStateChange: vi.fn()
     }
 
@@ -48,11 +50,13 @@ describe('history-list', () => {
       historyList,
       favoritesStore,
       savedCommandsCache: cache,
+      hiddenCommandsCache: { has: vi.fn().mockReturnValue(false) } as any,
       onSaveCommand,
       onDeleteCommand: vi.fn().mockResolvedValue(undefined),
       onRunCommand: vi.fn().mockResolvedValue(undefined),
       onShowCommandHelp: vi.fn().mockResolvedValue(undefined),
       onFavoriteAdded: vi.fn().mockResolvedValue(undefined),
+      onHideCommand: vi.fn().mockResolvedValue(undefined),
       onAfterStateChange
     })
 
@@ -73,11 +77,13 @@ describe('history-list', () => {
       historyList,
       favoritesStore,
       savedCommandsCache: cache,
+      hiddenCommandsCache: { has: vi.fn().mockReturnValue(false) } as any,
       onSaveCommand: vi.fn().mockResolvedValue(undefined),
       onDeleteCommand: vi.fn().mockResolvedValue(undefined),
       onRunCommand: vi.fn().mockResolvedValue(undefined),
       onShowCommandHelp: vi.fn().mockResolvedValue(undefined),
       onFavoriteAdded,
+      onHideCommand: vi.fn().mockResolvedValue(undefined),
       onAfterStateChange
     })
 
@@ -86,6 +92,33 @@ describe('history-list', () => {
 
     expect(onFavoriteAdded).toHaveBeenCalledWith('echo ok')
     expect(favoritesStore.isFavorite('echo ok')).toBe(true)
+    expect(onAfterStateChange).toHaveBeenCalledTimes(1)
+  })
+
+  it('hides a command and triggers state change', async () => {
+    const favoritesStore = createFavoritesStore('favorites-list-test')
+    const cache = new SavedCommandsCache()
+    const onHideCommand = vi.fn().mockResolvedValue(undefined)
+    const onAfterStateChange = vi.fn()
+
+    renderHistoryList(['echo hide-me'], {
+      historyList,
+      favoritesStore,
+      savedCommandsCache: cache,
+      hiddenCommandsCache: { has: vi.fn().mockReturnValue(false) } as any,
+      onSaveCommand: vi.fn().mockResolvedValue(undefined),
+      onDeleteCommand: vi.fn().mockResolvedValue(undefined),
+      onRunCommand: vi.fn().mockResolvedValue(undefined),
+      onShowCommandHelp: vi.fn().mockResolvedValue(undefined),
+      onFavoriteAdded: vi.fn().mockResolvedValue(undefined),
+      onHideCommand,
+      onAfterStateChange
+    })
+
+    const hideButton = historyList.querySelector('.hide-button') as HTMLButtonElement
+    await hideButton.onclick?.(new MouseEvent('click'))
+
+    expect(onHideCommand).toHaveBeenCalledWith('echo hide-me')
     expect(onAfterStateChange).toHaveBeenCalledTimes(1)
   })
 })

@@ -3,7 +3,7 @@ use regex::Regex;
 use rusqlite::{params, Connection};
 use serde::Serialize;
 use std::{env, fs};
-use std::process::Command;
+use std::process::{Command, id};
 use std::collections::HashMap;
 use std::sync::Mutex;
 use std::path::PathBuf;
@@ -261,6 +261,22 @@ fn get_connection() -> Connection {
     .unwrap();
 
     conn
+}
+
+fn create_hidden_commands_table() {
+    let conn = get_connection();
+
+    conn.execute(
+        "
+        CREATE TABLE IF NOT EXISTS hidden_commands (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            command TEXT NOT NULL UNIQUE,
+            hidden_at TEXT DEFAULT CURRENT_TIMESTAMP
+        )
+        ",
+        [],
+    )
+    .unwrap();
 }
 
 #[tauri::command]
@@ -933,6 +949,90 @@ fn install_xdotool()
     install_package("xdotool")
 }
 
+#[tauri::command]
+fn get_hidden_commands()
+-> Result<Vec<String>, String> {
+
+    let conn = get_connection();
+    create_hidden_commands_table();
+
+    let mut stmt =
+        conn.prepare(
+
+            "
+            SELECT command
+            FROM hidden_commands
+            ORDER BY hidden_at DESC
+            "
+        )
+        .map_err(|e| e.to_string())?;
+
+    let rows =
+        stmt.query_map([], |row| {
+
+            Ok(
+                row.get::<_, String>(0)?
+            )
+        })
+        .map_err(|e| e.to_string())?;
+
+    let mut commands = vec![];
+
+    for row in rows {
+
+        commands.push(
+            row.map_err(|e| e.to_string())?
+        );
+    }
+
+    Ok(commands)
+}
+
+#[tauri::command]
+fn unhide_command(
+    command: String
+) -> Result<(), String> {
+
+    let conn = get_connection();
+
+    conn.execute(
+
+        "
+        DELETE FROM hidden_commands
+        WHERE command = ?1
+        ",
+
+        params![command]
+
+    )
+    .map_err(|e| e.to_string())?;
+
+    Ok(())
+}
+
+#[tauri::command]
+fn hide_command(
+    command: String
+) -> Result<(), String> {
+
+    let conn = get_connection();
+    create_hidden_commands_table();
+
+    conn.execute(
+
+        "
+        INSERT OR IGNORE INTO hidden_commands (command)
+        VALUES (?1)
+        ",
+
+        params![command]
+
+    )
+    .map_err(|e| e.to_string())?;
+
+    Ok(())
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -958,7 +1058,10 @@ pub fn run() {
             has_internet,
             has_xdotool,
             install_xdotool,
-            detect_package_manager
+            detect_package_manager,
+            get_hidden_commands,
+            unhide_command,
+            hide_command
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

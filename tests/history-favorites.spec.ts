@@ -61,6 +61,14 @@ function createTauriMockScript() {
           return store.savedCommands.map(([id, command]) => [id, command])
         }
 
+        if (cmd === 'get_hidden_commands') {
+          return []
+        }
+
+        if (cmd === 'hide_command' || cmd === 'unhide_command') {
+          return null
+        }
+
         if (cmd === 'get_tldr') {
           return 'mock tldr content'
         }

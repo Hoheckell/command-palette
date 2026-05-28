@@ -60,6 +60,13 @@ export const appShellHtml = `
 </button>
 
 <button
+  id="view-hidden-commands"
+  title="Ver comandos ocultos"
+>
+  🙈
+</button>
+
+<button
   id="open-command-builder"
   title="Abrir assistente de composição"
 >
