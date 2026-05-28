@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.4.0] - 2026-05-28
+
+### Adicionado
+
+- Comando Tauri `hide_command` para ocultar comandos do histórico
+- Comando Tauri `unhide_command` para restaurar comandos ocultos
+- Comando Tauri `get_hidden_commands` para listar comandos ocultos
+- Botão 🙈 na toolbar para acessar o modal de comandos ocultos
+- Modal de listagem de comandos ocultos com ação "Reativar"
+- Botão 🙈 por linha no histórico para ocultar comandos individualmente
+- `HiddenCommandsCache` para sincronização instantânea da lista de ocultos
+- Testes unitários para ocultação, listagem vazia e restauração de comandos
+
+### Alterado
+
+- `RenderHistoryListDeps` agora requer `hiddenCommandsCache` e `onHideCommand`
+- Histórico agora filtra comandos ocultos automaticamente
+- `loadHistory()` sincroniza cache de ocultos ao carregar
+
+### Removido
+
+- Função `loadHiddenCommands()` obsoleta e listeners globais `.unhide-command` em `main.ts`
+
 ## [0.3.0] - 2026-05-26
 
 ### Adicionado
