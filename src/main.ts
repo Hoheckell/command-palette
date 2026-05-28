@@ -2,9 +2,11 @@ import './style.css'
 import Fuse from 'fuse.js'
 import { createFavoritesStore } from './features/history/favorites-store'
 import { SavedCommandsCache } from './features/history/saved-commands-cache'
+import { HiddenCommandsCache } from './features/history/hidden-commands.cache'
 import { renderHistoryList } from './features/history/history-list'
 import { openSavedCommandsModal } from './features/history/saved-commands-modal'
 import { openSavedHistoryModal } from './features/history/saved-history-modal'
+import { openHiddenCommandsModal } from './features/history/hidden-commands-modal'
 import { showCommandHelp } from './features/help/command-help'
 import { openAppHelp } from './features/help/app-help'
 import { openCommandBuilderModal } from './features/builder/command-builder-modal'
@@ -56,6 +58,7 @@ const {
   viewSavedHistoryButton,
   viewSavedCommandsButton,
   viewSavedHelpsButton,
+  viewHiddenCommandsButton,
   openCommandBuilderButton,
   helpContainer,
   openHelpButton,
@@ -78,6 +81,7 @@ const favoritesStorageKey = 'favorite-history-commands'
 const favoritesStore = createFavoritesStore(favoritesStorageKey)
 
 const savedCommandsCache = new SavedCommandsCache()
+const hiddenCommandsCache = new HiddenCommandsCache()
 
 let fuse: Fuse<string>
 
@@ -127,6 +131,7 @@ function rerenderCurrentList() {
     historyList,
     favoritesStore,
     savedCommandsCache,
+    hiddenCommandsCache,
     onSaveCommand: async command => {
       await saveHistoryCommand(command)
     },
@@ -142,6 +147,10 @@ function rerenderCurrentList() {
     },
     onFavoriteAdded: async command => {
       await saveHistoryCommand(command)
+    },
+    onHideCommand: async command => {
+      await tauriApi.hideCommand(command)
+      await hiddenCommandsCache.sync()
     },
     onAfterStateChange: () => {
       rerenderCurrentList()
@@ -222,6 +231,14 @@ function bindEvents() {
     })
   }
 
+  viewHiddenCommandsButton.onclick = async () => {
+    await openHiddenCommandsModal({
+      openSavedModal,
+      rerenderCurrentList,
+      hiddenCommandsCache
+    })
+  }
+
   openCommandBuilderButton.onclick = () => {
     openCommandBuilderModal({
       container: builderModal,
@@ -247,6 +264,7 @@ async function loadHistory() {
   })
 
   await savedCommandsCache.sync()
+  await hiddenCommandsCache.sync()
 
   rerenderCurrentList()
 }
@@ -512,7 +530,7 @@ async function checkXdotool() {
   }
 }
 
-document
+  document
   .querySelectorAll('.help-command')
   .forEach(button => {
 

@@ -1,12 +1,15 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { openSavedCommandsModal } from './saved-commands-modal'
 import { openSavedHistoryModal } from './saved-history-modal'
+import { openHiddenCommandsModal } from './hidden-commands-modal'
 
-const { getSavedCommands, getSavedHistory, deleteSavedCommand, runCommand } = vi.hoisted(() => ({
+const { getSavedCommands, getSavedHistory, deleteSavedCommand, runCommand, getHiddenCommands, unhideCommand } = vi.hoisted(() => ({
   getSavedCommands: vi.fn(),
   getSavedHistory: vi.fn(),
   deleteSavedCommand: vi.fn(),
-  runCommand: vi.fn()
+  runCommand: vi.fn(),
+  getHiddenCommands: vi.fn(),
+  unhideCommand: vi.fn()
 }))
 
 vi.mock('../../services/tauri-api', () => {
@@ -15,7 +18,9 @@ vi.mock('../../services/tauri-api', () => {
       getSavedCommands,
       getSavedHistory,
       deleteSavedCommand,
-      runCommand
+      runCommand,
+      getHiddenCommands,
+      unhideCommand
     }
   }
 })
@@ -27,6 +32,8 @@ describe('saved modals', () => {
     getSavedHistory.mockReset()
     deleteSavedCommand.mockReset()
     runCommand.mockReset()
+    getHiddenCommands.mockReset()
+    unhideCommand.mockReset()
   })
 
   it('shows empty state for saved commands', async () => {
@@ -85,5 +92,45 @@ describe('saved modals', () => {
     })
 
     expect(openSavedModal).toHaveBeenCalledWith('Histórico salvo', 'Nenhum histórico salvo ainda.')
+  })
+
+  it('shows empty state for hidden commands', async () => {
+    getHiddenCommands.mockResolvedValue([])
+    const openSavedModal = vi.fn()
+
+    await openHiddenCommandsModal({
+      openSavedModal,
+      hiddenCommandsCache: { sync: vi.fn() } as any,
+      rerenderCurrentList: vi.fn()
+    })
+
+    expect(openSavedModal).toHaveBeenCalledWith('Comandos ocultos', 'Nenhum comando oculto ainda.')
+  })
+
+  it('unhides a command from hidden commands modal', async () => {
+    getHiddenCommands.mockResolvedValueOnce(['echo hidden']).mockResolvedValueOnce([])
+    unhideCommand.mockResolvedValue(undefined)
+
+    const sync = vi.fn().mockResolvedValue(undefined)
+    const rerenderCurrentList = vi.fn()
+    const openSavedModal = vi.fn((_: string, content: string) => {
+      const modal = document.querySelector('#modal') as HTMLDivElement
+      modal.innerHTML = content
+    })
+
+    await openHiddenCommandsModal({
+      openSavedModal,
+      hiddenCommandsCache: { sync } as any,
+      rerenderCurrentList
+    })
+
+    const unhideBtn = document.querySelector('.unhide-command') as HTMLButtonElement
+    unhideBtn.click()
+    await Promise.resolve()
+    await Promise.resolve()
+
+    expect(unhideCommand).toHaveBeenCalledWith('echo hidden')
+    expect(sync).toHaveBeenCalled()
+    expect(rerenderCurrentList).toHaveBeenCalled()
   })
 })

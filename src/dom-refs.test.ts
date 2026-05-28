@@ -17,6 +17,7 @@ describe('dom-refs', () => {
     expect(refs.viewSavedCommandsButton.id).toBe('view-saved-commands')
     expect(refs.viewSavedHistoryButton.id).toBe('view-saved-history')
     expect(refs.viewSavedHelpsButton.id).toBe('view-saved-helps')
+    expect(refs.viewHiddenCommandsButton.id).toBe('view-hidden-commands')
     expect(refs.openCommandBuilderButton.id).toBe('open-command-builder')
     expect(refs.openHelpButton.id).toBe('open-help')
     expect(refs.commandHelp.id).toBe('command-help')
