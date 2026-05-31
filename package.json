@@ -1,7 +1,7 @@
 {
   "name": "command-palette",
   "private": true,
-  "version": "0.4.0",
+  "version": "0.4.1",
   "type": "module",
   "author": "Hoheckell",
   "license": "MIT",

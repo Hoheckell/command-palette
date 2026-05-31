@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.4.1] - 2026-05-31
+
+### Adicionado
+- Modal dedicado para a visualização dos helps salvos (`saved-helps-modal.ts`)
+- Captura da "Explicação aprofundada" gerada por IA ao salvar a ajuda de um comando
+- Indicador persistente e visível na interface de conexão ativa com o terminal
+
+### Corrigido
+- Visualização de helps salvos que antes exibia apenas o comando sem a ajuda
+- Prevenção de duplicação ao salvar um comando ou o histórico completo; agora os registros existentes são atualizados ao invés de duplicados no banco de dados
+
 ## [0.4.0] - 2026-05-28
 
 ### Adicionado
