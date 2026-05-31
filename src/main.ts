@@ -4,6 +4,7 @@ import { createFavoritesStore } from './features/history/favorites-store'
 import { SavedCommandsCache } from './features/history/saved-commands-cache'
 import { HiddenCommandsCache } from './features/history/hidden-commands.cache'
 import { renderHistoryList } from './features/history/history-list'
+import { openSavedHelpsModal } from './features/history/saved-helps-modal'
 import { openSavedCommandsModal } from './features/history/saved-commands-modal'
 import { openSavedHistoryModal } from './features/history/saved-history-modal'
 import { openHiddenCommandsModal } from './features/history/hidden-commands-modal'
@@ -216,7 +217,7 @@ function bindEvents() {
   }
 
   viewSavedHelpsButton.onclick = async () => {
-    await openSavedCommandsModal({
+    await openSavedHelpsModal({
       openSavedModal,
       savedCommandsCache,
       rerenderCurrentList

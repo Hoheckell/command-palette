@@ -1,5 +1,5 @@
 import { invoke } from '@tauri-apps/api/core'
-import type { CommandHelpData, SavedCommandRow, SavedHistoryRow } from '../shared/types/command'
+import type { CommandHelpData, SavedCommandRow, SavedHistoryRow, SavedHelpRow } from '../shared/types/command'
 
 export const tauriApi = {
   hasInternet() {
@@ -75,7 +75,7 @@ export const tauriApi = {
   },
   
   getSavedHelps() {
-    return invoke<CommandHelpData[]>('get_saved_helps')
+    return invoke<SavedHelpRow[]>('get_saved_helps')
   }
   
 }

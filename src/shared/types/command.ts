@@ -1,5 +1,6 @@
 export type SavedCommandRow = [number, string]
 export type SavedHistoryRow = [number, string]
+export type SavedHelpRow = [number, string, string]
 
 export interface CommandFlag {
   flag: string

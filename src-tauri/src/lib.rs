@@ -594,13 +594,13 @@ fn disconnect_terminal(state: tauri::State<AppState>) -> Result<(), String> {
 }
 
 #[tauri::command]
-fn get_saved_helps() -> Result<Vec<(String, String)>, String> {
+fn get_saved_helps() -> Result<Vec<(i64, String, String)>, String> {
     let conn = get_connection();
 
     let mut stmt = conn
         .prepare(
             "
-        SELECT command, help
+        SELECT id, command, help
         FROM commands
         WHERE help != ''
         ORDER BY id DESC
@@ -610,7 +610,7 @@ fn get_saved_helps() -> Result<Vec<(String, String)>, String> {
 
     let rows = stmt
         .query_map([], |row| {
-            Ok((row.get::<_, String>(0)?, row.get::<_, String>(1)?))
+            Ok((row.get::<_, i64>(0)?, row.get::<_, String>(1)?, row.get::<_, String>(2)?))
         })
         .map_err(|e| e.to_string())?;
 

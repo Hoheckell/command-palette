@@ -95,12 +95,14 @@ export async function showCommandHelp(commandHelp: HTMLDivElement, cmd: string) 
       }
     }
 
+    let contentToSave = content
+
     const saveButton = commandHelp.querySelector('#save-command') as HTMLButtonElement | null
 
     if (saveButton) {
       saveButton.onclick = async () => {
         try {
-          await tauriApi.saveCommand(cmd, content, 'manual')
+          await tauriApi.saveCommand(cmd, contentToSave, 'manual')
 
           saveButton.innerText = 'Salvo'
         } catch (err) {
@@ -133,6 +135,8 @@ export async function showCommandHelp(commandHelp: HTMLDivElement, cmd: string) 
           cmd,
           content
         )
+
+      contentToSave = content + '\n\nExplicação Aprofundada:\n' + explanation
 
       container.innerHTML = `
         <div class="deep-help">
