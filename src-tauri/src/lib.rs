@@ -299,49 +299,89 @@ fn save_command(command: String, help: String, source: String) -> Result<(), Str
 
     let now = Utc::now().to_rfc3339();
 
-    conn.execute(
-        "
-        INSERT INTO commands (
-            command,
-            base_command,
-            help,
-            created_at,
-            source
-        )
-        VALUES (?1, ?2, ?3, ?4, ?5)
-        ",
-        params![command, base_command, help, now, source],
-    )
-    .map_err(|e| e.to_string())?;
+    let existing_result = conn.query_row(
+        "SELECT id, help FROM commands WHERE command = ?1",
+        params![&command],
+        |row| Ok((row.get::<_, i64>(0)?, row.get::<_, Option<String>>(1)?)),
+    );
+
+    match existing_result {
+        Ok((id, existing_help)) => {
+            let existing_help = existing_help.unwrap_or_default();
+            let new_help = if help.is_empty() { existing_help } else { help };
+            conn.execute(
+                "UPDATE commands SET help = ?1, created_at = ?2, source = ?3 WHERE id = ?4",
+                params![new_help, now, source, id],
+            )
+            .map_err(|e| e.to_string())?;
+        }
+        Err(rusqlite::Error::QueryReturnedNoRows) => {
+            conn.execute(
+                "
+                INSERT INTO commands (
+                    command,
+                    base_command,
+                    help,
+                    created_at,
+                    source
+                )
+                VALUES (?1, ?2, ?3, ?4, ?5)
+                ",
+                params![command, base_command, help, now, source],
+            )
+            .map_err(|e| e.to_string())?;
+        }
+        Err(e) => return Err(e.to_string()),
+    }
 
     Ok(())
 }
 
 #[tauri::command]
 fn save_history(commands: Vec<String>) -> Result<(), String> {
-    let conn = get_connection();
+    let mut conn = get_connection();
+    let tx = conn.transaction().map_err(|e| e.to_string())?;
 
     let now = Utc::now().to_rfc3339();
 
     for command in commands {
         let base_command = command.split(' ').next().unwrap_or("").to_string();
 
-        conn.execute(
-            "
-            INSERT INTO commands (
-                command,
-                base_command,
-                help,
-                created_at,
-                source
-            )
-            VALUES (?1, ?2, ?3, ?4, ?5)
-            ",
-            params![command, base_command, "", now, "history"],
-        )
-        .map_err(|e| e.to_string())?;
+        let existing_result = tx.query_row(
+            "SELECT id FROM commands WHERE command = ?1",
+            params![&command],
+            |row| row.get::<_, i64>(0),
+        );
+
+        match existing_result {
+            Ok(id) => {
+                tx.execute(
+                    "UPDATE commands SET created_at = ?1, source = ?2 WHERE id = ?3",
+                    params![now, "history", id],
+                )
+                .map_err(|e| e.to_string())?;
+            }
+            Err(rusqlite::Error::QueryReturnedNoRows) => {
+                tx.execute(
+                    "
+                    INSERT INTO commands (
+                        command,
+                        base_command,
+                        help,
+                        created_at,
+                        source
+                    )
+                    VALUES (?1, ?2, ?3, ?4, ?5)
+                    ",
+                    params![command, base_command, "", now, "history"],
+                )
+                .map_err(|e| e.to_string())?;
+            }
+            Err(e) => return Err(e.to_string()),
+        }
     }
 
+    tx.commit().map_err(|e| e.to_string())?;
     Ok(())
 }
 

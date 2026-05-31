@@ -66,6 +66,7 @@ const {
   commandHelp,
   builderModal,
   tldrStatus,
+  terminalStatus,
   disconnectButton,
   captureButton,
   historyList,
@@ -188,6 +189,12 @@ function bindEvents() {
       try {
         const id = await tauriApi.saveTerminalWindow()
         showToast(`Terminal conectado (${id})`, 'success')
+        terminalStatus.innerHTML = `
+          <div class="tldr-row">
+            <span class="dot green"></span>
+            <span>Terminal conectado (${id})</span>
+          </div>
+        `
       } catch (err) {
         console.error(err)
         showToast('Erro ao conectar no terminal', 'error')
@@ -199,6 +206,7 @@ function bindEvents() {
     try {
       await tauriApi.disconnectTerminal()
       showToast('Terminal desconectado', 'info')
+      terminalStatus.innerHTML = ''
     } catch (err) {
       console.error(err)
     }
